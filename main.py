@@ -90,7 +90,7 @@ def addProcess():
                     # * Go back to Main menu
                     main()
         # * If no process was found, the program won't go to main menu, see the code above. 
-        # * So we will raise an alert to say that no program was found and ask the user again for the program to block.
+        # * So we will raise an alert to say that no program was found and ask the user again for what the program to block.
         print(f"Process {process_name} was not found.")
         time.sleep(2)
         addProcess()
