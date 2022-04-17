@@ -1,7 +1,8 @@
+from turtle import title
 from xmlrpc.client import boolean
 import psutil
 import time
-import sys
+import prettytable
 import os
 
 list_of_blocked_processes: psutil.Process = []
@@ -47,9 +48,15 @@ def main():
 
 def addProcess():
     print("You can type 'back' to go back to the main menu.")
-    for proc in psutil.process_iter():
-        proc.
-    process_name = str(input("Enter process name (e.g: chrome.exe): "))
+    
+    # * Print the running processes in the system through the use of prettytable module.
+    ptable = prettytable.PrettyTable(field_names=["PID", "Process Name"], title="Process List")
+    for proc in psutil.process_iter:
+        ptable.add_row([proc.pid(), proc.name()])
+    print(ptable)
+    
+    # Ask the user to pick from the process above.
+    process_name = input("Enter process name (e.g: chrome.exe): ")
     if process_name == "":
         print("Process name cannot be empty.")
         time.sleep(2)
@@ -71,8 +78,9 @@ def clearAllBlockedProcesses():
 
 
 def listAllBlockedProcesses():
-    for proc in list_of_blocked_processes:
-        
+    pass
+    
+    
 
 
 def startBlocking():
