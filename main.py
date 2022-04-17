@@ -1,5 +1,4 @@
-from multiprocessing import process
-from xmlrpc.client import Boolean
+import subprocess
 import psutil
 import time
 import prettytable
@@ -11,9 +10,9 @@ blocking_started: bool = False
 
 def clear():
     if os.name == 'nt':
-        os.system('cls')
+        subprocess.Popen("cls", shell=True).communicate()
     else:
-        os.system('clear')
+        print("\033c", endline="")
 
 
 def isNumber(value):
