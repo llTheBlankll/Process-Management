@@ -1,5 +1,5 @@
-from turtle import title
-from xmlrpc.client import boolean
+from multiprocessing import process
+from xmlrpc.client import Boolean
 import psutil
 import time
 import prettytable
@@ -14,6 +14,10 @@ def clear():
         os.system('cls')
     else:
         os.system('clear')
+
+
+def isNumber(value):
+    return any(char.isdigit() for char in value)
 
 
 def main():
@@ -51,12 +55,13 @@ def addProcess():
     
     # * Print the running processes in the system through the use of prettytable module.
     ptable = prettytable.PrettyTable(field_names=["PID", "Process Name"], title="Process List")
-    for proc in psutil.process_iter:
-        ptable.add_row([proc.pid(), proc.name()])
+    for proc in psutil.process_iter():
+        ptable.add_row([proc.pid, proc.name()])
     print(ptable)
     
     # Ask the user to pick from the process above.
-    process_name = input("Enter process name (e.g: chrome.exe): ")
+    process_name = input("Enter process name (e.g: chrome.exe): ")    
+    
     if process_name == "":
         print("Process name cannot be empty.")
         time.sleep(2)
@@ -64,10 +69,31 @@ def addProcess():
     elif process_name == "back":
         main()
     else:
-        list_of_blocked_processes.append(process_name)
-        print(f"Process {process_name} blocked successfully.")
+        # If the entered input contains number then it can be called as PID of the program. 
+        # If not, then it is a process name of the program not the PID.
+        if isNumber(process_name):
+            process_name = int(process_name)
+            for proc in psutil.process_iter():
+                if process_name == proc.pid:
+                    print(f"Process {proc.name()} with the PID of {proc.pid} is blocked successfully.")
+                    list_of_blocked_processes.append(proc)
+                    time.sleep(2)
+                    # * Go back to Main menu
+                    main()
+        else:
+            process_name = str(process_name)
+            for proc in psutil.process_iter():
+                if process_name == str(proc.name()):
+                    print(f"Process {proc.name()} is blocked successfully.")
+                    list_of_blocked_processes.append(proc)
+                    time.sleep(2)
+                    # * Go back to Main menu
+                    main()
+        # * If no process was found, the program won't go to main menu, see the code above. 
+        # * So we will raise an alert to say that no program was found and ask the user again for the program to block.
+        print(f"Process {process_name} was not found.")
         time.sleep(2)
-        main()
+        addProcess()
 
 
 def clearAllBlockedProcesses():
